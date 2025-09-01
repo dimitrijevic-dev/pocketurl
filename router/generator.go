@@ -1,14 +1,13 @@
 package router
 
 import (
-	"fmt"
 	"math/rand"
+	"pocketurl/persistence"
 )
 
-func GenerateLink(linkRequest linkRequest) Link {
+func GenerateLink(linkRequest linkRequest) persistence.Link {
 	randomRoute := generateRoute()
-	fmt.Println(randomRoute)
-	newLink := Link{
+	newLink := persistence.Link{
 		OriginUrl: randomRoute,
 		ExpiresAt: linkRequest.ExpiresAt,
 		DestinationUrl: linkRequest.DestinationUrl,
