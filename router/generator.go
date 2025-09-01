@@ -11,6 +11,7 @@ func GenerateLink(linkRequest linkRequest) persistence.Link {
 		OriginUrl: randomRoute,
 		ExpiresAt: linkRequest.ExpiresAt,
 		DestinationUrl: linkRequest.DestinationUrl,
+		Domain: linkRequest.Domain,
 	}
 	return newLink
 }

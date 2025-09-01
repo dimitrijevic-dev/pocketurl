@@ -16,6 +16,7 @@ type Link struct {
 	ExpiresAt time.Time `json:"expires_at"`
 	CreatedAt time.Time `json:"created_at"`
 	DestinationUrl string `json:"destination_url"`
+	Domain string `json:"domain"`
 }
 
 
@@ -36,8 +37,8 @@ func GetLinkByOrigin(origin string) *Link {
 }
 
 func AddLink(link Link) error {
-	query := `INSERT INTO links (origin_url, destination_url, expires_at) VALUES ($1, $2, $3)`
-	_,err := conn.Exec(context.Background(),query,link.OriginUrl,link.DestinationUrl,link.ExpiresAt)
+	query := `INSERT INTO links (origin_url, destination_url, expires_at, domain) VALUES ($1, $2, $3, $4)`
+	_,err := conn.Exec(context.Background(),query,link.OriginUrl,link.DestinationUrl,link.ExpiresAt,link.Domain)
 	return err
 }
 

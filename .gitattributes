@@ -1,0 +1,9 @@
+*.go linguist-language=Go
+static/react/* linguist-vendored
+static/react/**/* linguist-vendored
+
+*.go linguist-detectable=true
+*.ts linguist-detectable=false
+*.tsx linguist-detectable=false
+*.js linguist-detectable=false
+*.jsx linguist-detectable=false
