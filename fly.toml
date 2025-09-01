@@ -1,12 +1,7 @@
 app = 'pocketurl'
 primary_region = 'fra'
 
-# Custom domain configuration
-[[domains]]
-  name = "pocketurl.zip"
-
 [build]
-  dockerfile = "Dockerfile"
 
 [env]
   PORT = "8080"
