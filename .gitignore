@@ -1,0 +1,39 @@
+# Environment variables
+.env
+.env.local
+
+# Claude Code
+.claude/
+
+# Go build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+main
+pocketurl
+
+# Go test files
+*.test
+*.out
+
+# Go coverage files
+*.cover
+coverage.txt
+
+# Go module cache
+go.sum
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
