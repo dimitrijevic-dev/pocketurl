@@ -20,7 +20,7 @@ func Start() {
 	router := gin.Default()
 
 	router.Use(func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", "https://pocketurl.zip")
+		c.Header("Access-Control-Allow-Origin", "*")
 		c.Header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 		c.Header("Access-Control-Allow-Headers", "Content-Type")
 		
@@ -34,11 +34,15 @@ func Start() {
 	router.GET("/:origin", getLinkByOrigin)
 	router.POST("/links", postLinks)
 
+	certFile := "/etc/letsencrypt/live/api.pocketurl.zip/fullchain.pem"
+	keyFile := "/etc/letsencrypt/live/api.pocketurl.zip/privkey.pem"
+	
 	port := config.GetEnv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "443"
 	}
-	router.Run(":" + port)
+	
+	router.RunTLS(":"+port, certFile, keyFile)
 }
 
 

@@ -37,13 +37,14 @@ const UrlShortener = () => {
         },
         body: JSON.stringify({
           destination_url: url,
-          expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days
+          expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          domain: domain,
         }),
       });
 
       if (response.ok) {
         const data: ShortenedUrl = await response.json();
-        const fullShortUrl = `https://${domain}/${data.origin_url}`;
+        const fullShortUrl = `https://s.${domain}/${data.origin_url}`;
         setShortenedUrl(fullShortUrl);
         toast({
           title: "Success!",
