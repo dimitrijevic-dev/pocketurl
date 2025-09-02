@@ -18,9 +18,8 @@ type linkRequest struct {
 func Start() {
 	router := gin.Default()
 
-	// Enable CORS for React frontend
 	router.Use(func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", "http://localhost:3000")
+		c.Header("Access-Control-Allow-Origin", "https://pocketurl.zip")
 		c.Header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 		c.Header("Access-Control-Allow-Headers", "Content-Type")
 		
@@ -34,7 +33,11 @@ func Start() {
 	router.GET("/:origin", getLinkByOrigin)
 	router.POST("/links", postLinks)
 
-	router.Run("localhost:8080")
+	port := config.GetEnv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	router.Run(":" + port)
 }
 
 
