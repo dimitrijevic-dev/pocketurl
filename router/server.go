@@ -57,7 +57,8 @@ func postLinks(c *gin.Context) {
 
 	newLink := GenerateLink(newLinkRequest)
 	for {
-		if link := persistence.GetLinkByOrigin(newLink.OriginUrl); link == nil {
+		existingLink := persistence.GetLinkByOrigin(newLink.OriginUrl)
+		if existingLink == nil || existingLink.ID == 0 {
 			break
 		}
 		newLink = GenerateLink(newLinkRequest)
