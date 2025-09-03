@@ -2,8 +2,8 @@ package router
 
 import (
 	"net/http"
-	"pocketurl/persistence"
 	"pocketurl/config"
+	"pocketurl/persistence"
 	"strings"
 	"time"
 
@@ -11,9 +11,8 @@ import (
 )
 
 type linkRequest struct {
-	ExpiresAt time.Time `json:"expires_at"`
 	DestinationUrl string `json:"destination_url"`
-	Domain string `json:"domain"`
+	Domain         string `json:"domain"`
 }
 
 func Start() {
@@ -23,7 +22,7 @@ func Start() {
 		c.Header("Access-Control-Allow-Origin", "*")
 		c.Header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 		c.Header("Access-Control-Allow-Headers", "Content-Type")
-		
+
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
 			return
@@ -36,25 +35,37 @@ func Start() {
 
 	certFile := "/etc/letsencrypt/live/api.pocketurl.zip/fullchain.pem"
 	keyFile := "/etc/letsencrypt/live/api.pocketurl.zip/privkey.pem"
-	
+	_, _ = certFile, keyFile
+
 	port := config.GetEnv("PORT")
 	if port == "" {
 		port = "443"
 	}
-	
+
+	//router.Run("localhost:8080")
 	router.RunTLS(":"+port, certFile, keyFile)
 }
 
-
 func postLinks(c *gin.Context) {
 	var newLinkRequest linkRequest
-	if err := c.BindJSON(&newLinkRequest); err != nil { return }
-	if !(strings.HasPrefix(newLinkRequest.DestinationUrl,"https://") || strings.HasPrefix(newLinkRequest.DestinationUrl,"http://")) {
-		newLinkRequest.DestinationUrl = "https://"+newLinkRequest.DestinationUrl
+	if err := c.BindJSON(&newLinkRequest); err != nil {
+		return
+	}
+	if !(strings.HasPrefix(newLinkRequest.DestinationUrl, "https://") || strings.HasPrefix(newLinkRequest.DestinationUrl, "http://")) {
+		newLinkRequest.DestinationUrl = "https://" + newLinkRequest.DestinationUrl
 	}
 
 	newLink := GenerateLink(newLinkRequest)
-	if err := persistence.AddLink(newLink); err != nil { return }
+	for {
+		if link := persistence.GetLinkByOrigin(newLink.OriginUrl); link == nil {
+			break
+		}
+		newLink = GenerateLink(newLinkRequest)
+	}
+
+	if err := persistence.AddLink(newLink); err != nil {
+		return
+	}
 	c.IndentedJSON(http.StatusCreated, newLink)
 }
 
@@ -62,11 +73,11 @@ func getLinkByOrigin(c *gin.Context) {
 	originParameter := c.Param("origin")
 	result := persistence.GetLinkByOrigin(originParameter)
 	if result == nil {
-		c.IndentedJSON(http.StatusNotFound, gin.H{"message":"link not found"})
-	} else if result.ExpiresAt.After(time.Now()){
-		c.Redirect(http.StatusPermanentRedirect,result.DestinationUrl)
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "link not found"})
+	} else if result.ExpiresAt.After(time.Now()) {
+		c.Redirect(http.StatusPermanentRedirect, result.DestinationUrl)
 	} else {
 		persistence.DeleteLink(*result)
-		c.IndentedJSON(http.StatusNotFound, gin.H{"message":"link not found"})
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "link not found"})
 	}
 }

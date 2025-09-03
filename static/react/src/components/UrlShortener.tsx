@@ -37,7 +37,6 @@ const UrlShortener = () => {
         },
         body: JSON.stringify({
           destination_url: url,
-          expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
           domain: domain,
         }),
       });
@@ -125,7 +124,6 @@ const UrlShortener = () => {
                 <SelectContent>
                   <SelectItem value="pocketurl.zip">pocketurl.zip</SelectItem>
                   <SelectItem value="earnonlinerobux.online">earnonlinerobux.online</SelectItem>
-                  <SelectItem value="freeiphoneskentucky.biz">freeiphoneskentucky.biz</SelectItem>
                 </SelectContent>
               </Select>
             </div>

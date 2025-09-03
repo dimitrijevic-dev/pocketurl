@@ -19,6 +19,68 @@
 - **🌐 Multi-Domain** - Custom domain support
 - **🐳 Docker Ready** - Production containerization
 - **📊 Smart Cleanup** - Background expired link removal
+- **🔧 API Ready** - Full REST API for developers
+
+## 🔌 API Usage
+
+**Base URL:** `https://api.pocketurl.zip`
+
+### Create Short Link
+
+```bash
+curl -X POST https://api.pocketurl.zip/links \
+  -H "Content-Type: application/json" \
+  -d '{
+    "destination_url": "https://example.com",
+    "domain": "pocketurl.zip"
+  }'
+```
+
+**Response:**
+```json
+{
+  "id": 1,
+  "origin_url": "abc123",
+  "expires_at": "2025-01-10T12:00:00Z",
+  "created_at": "2025-01-03T12:00:00Z",
+  "destination_url": "https://example.com",
+  "domain": "pocketurl.zip"
+}
+```
+
+### Access Short Link
+
+```bash
+curl -L https://api.pocketurl.zip/abc123
+# Redirects to destination URL
+```
+
+### CLI Examples
+
+**Python:**
+```python
+import requests
+
+response = requests.post('https://api.pocketurl.zip/links', json={
+    'destination_url': 'https://github.com/user/repo',
+    'domain': 'pocketurl.zip'
+})
+short_url = f"https://pocketurl.zip/{response.json()['origin_url']}"
+```
+
+**JavaScript/Node.js:**
+```javascript
+const response = await fetch('https://api.pocketurl.zip/links', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    destination_url: 'https://example.com',
+    domain: 'pocketurl.zip'
+  })
+});
+const data = await response.json();
+console.log(`Short URL: https://pocketurl.zip/${data.origin_url}`);
+```
 
 ## 🛠️ Tech Stack
 

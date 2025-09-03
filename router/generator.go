@@ -3,17 +3,21 @@ package router
 import (
 	"math/rand"
 	"pocketurl/persistence"
+	"time"
 )
 
 func GenerateLink(linkRequest linkRequest) persistence.Link {
-	randomRoute := generateRoute()
 	newLink := persistence.Link{
-		OriginUrl: randomRoute,
-		ExpiresAt: linkRequest.ExpiresAt,
+		OriginUrl:      generateRoute(),
+		ExpiresAt:      generateExpirationDate(),
 		DestinationUrl: linkRequest.DestinationUrl,
-		Domain: linkRequest.Domain,
+		Domain:         linkRequest.Domain,
 	}
 	return newLink
+}
+
+func generateExpirationDate() time.Time {
+	return time.Now().AddDate(0, 0, 7)
 }
 
 func generateRoute() string {
